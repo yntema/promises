@@ -29,20 +29,20 @@ var Promise = require('bluebird');
 var pluckFirstLineFromFileAsync = function (filePath) {
   var promise = new Promise(function(resolve, reject) {
     fs.readFile(filePath, 'utf8', function(error, content) {
-      if(!error) {
-        resolve(content.split('\n')[0]); 
-      } else {
-        reject(error);
-      }
+      error ? reject(error) : resolve(content.split('\n')[0]); 
     });
   });
-
   return promise;
 };
 
 // This function should retrieve the status code of a GET request to `url`
 var getStatusCodeAsync = function (url) {
-  // TODO
+  var promise = new Promise(function(resolve, reject) {
+    request(url, function(error, response) {
+      error ? reject(error) : resolve(response.statusCode);
+    });
+  });
+  return promise;
 };
 
 // Export these functions so we can unit test them
@@ -50,4 +50,4 @@ var getStatusCodeAsync = function (url) {
 module.exports = {
   getStatusCodeAsync: getStatusCodeAsync,
   pluckFirstLineFromFileAsync: pluckFirstLineFromFileAsync
-}
+};
