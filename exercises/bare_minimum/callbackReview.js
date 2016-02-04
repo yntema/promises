@@ -17,11 +17,11 @@ var request = require('request');
 // Uncomment the lines below and run the example with `node exercises/bare_minimum/callbackReview.js`
 
 // fs.readFile(__dirname + '/../../README.md', 'utf8', function (err, content) {
-//   console.log('Example from callbackReview.js')
+//   console.log('Example from callbackReview.js');
 //   if (err) { 
-//     console.log('fs.readFile failed :(\n', err)
+//     console.log('fs.readFile failed :(\n', err);
 //   } else {
-//     console.log('fs.readFile successfully completed :)\n', content)
+//     console.log('fs.readFile successfully completed :)\n', content);
 //   }
 // });
 
@@ -36,17 +36,25 @@ var request = require('request');
 // This function should retrieve the first line of the file at `filePath`
 // HINT: Passing 'utf8' as the second argument to fs.readFile will give you a stringified file
 // HINT: You can get an array of lines by splitting on the '\n' character
-var pluckFirstLineFromFile = function (filePath
-) {
-  // YOUR CODE HERE
+var pluckFirstLineFromFile = function (filePath, callback) {
+  fs.readFile(filePath, 'utf8', function (err, content) {
+    if (err) { 
+      callback(err);
+    } else {
+      var lines = content.split('\n');
+      callback(err, lines[0]);
+    }
+  });
+  
 };
 
 // This function should retrieve the status code of a GET request to `url`
 // HINT: the `request` module has been included to help you send HTTP requests
 // HINT: there is a `statusCode` property on the `response` object
-var getStatusCode = function (url
-) {
-  // YOUR CODE HERE
+var getStatusCode = function (url, callback) {
+  request(url, function(error, response, body) {
+    error ? callback(error) : callback(error, response.statusCode)
+  });
 };
 
 // Export these functions so we can unit test them
@@ -55,3 +63,30 @@ module.exports = {
   getStatusCode: getStatusCode,
   pluckFirstLineFromFile: pluckFirstLineFromFile
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
