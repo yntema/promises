@@ -4,7 +4,8 @@
 
 var Promise = require('bluebird');
 var asyncLib = require('../../lib/asyncLib.js');
-
+var promiseConstructor = require('../bare_minimum/promiseConstructor.js');
+var fs = require('fs');
 /**
  * A common asyncronous pattern:
  *   1. Run a few async tasks (read some files, send API requests, etc.)
@@ -58,11 +59,56 @@ var asyncLib = require('../../lib/asyncLib.js');
   *   })
   */
 
+var readFileAsync = function(filePath) {
+  return new Promise(function(resolve, reject) {
+    fs.readFile(filePath, 'utf8', function(err, file) {
+      if(err) {
+        reject(err);
+      } else {
+        resolve(file);
+      }
+    });
+  });
+};
+
+
+
 var combineFirstLineOfManyFiles = function (filePaths, writePath) {
- // YOUR CODE HERE
+  var readFiles = [];
+  for (var i = 0; i < filePaths.length; i++) {
+    readFiles.push(promiseConstructor.pluckFirstLineFromFileAsync(filePaths[i]));
+  }
+  return Promise.all(readFiles)
+  .then(function(file) {
+    file = file.join('\n');
+    fs.writeFile(writePath, file);
+    console.log("------------------------ final file to",file);
+  }
+  );
 };
 
 // Export these functions so we can unit test them
 module.exports = {
   combineFirstLineOfManyFiles: combineFirstLineOfManyFiles
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

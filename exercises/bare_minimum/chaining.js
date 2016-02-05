@@ -78,14 +78,14 @@ var addNewUserToDatabaseAsync = function(user) {
 
 // Uncomment the lines below and run the example with `node exercises/bare_minimum/chaining.js`
 // It will succeed most of the time, but fail occasionally to demonstrate error handling
-addNewUserToDatabaseAsync({ name: 'Dan', password: 'chickennuggets' })
-  .then(function(savedUser) {
-    console.log('All done!')
-  })
-  .catch(function(err) {
-    // Will catch any promise rejections or thrown errors in the chain!
-    console.log('Oops, caught an error: ', err.message)
-  });
+// addNewUserToDatabaseAsync({ name: 'Dan', password: 'chickennuggets' })
+//   .then(function(savedUser) {
+//     console.log('All done!')
+//   })
+//   .catch(function(err) {
+//     // Will catch any promise rejections or thrown errors in the chain!
+//     console.log('Oops, caught an error: ', err.message)
+//   });
 
 /******************************************************************
  *                         Exercises                              *
@@ -101,12 +101,67 @@ addNewUserToDatabaseAsync({ name: 'Dan', password: 'chickennuggets' })
 var pluckFirstLineFromFileAsync = require('./promiseConstructor').pluckFirstLineFromFileAsync;
 var getGitHubProfileAsync = require('./promisification').getGitHubProfileAsync
 
-
+var writeFileAsync = function(filePath, content) {
+  return new Promise(function(resolve, reject) {
+    fs.writeFile(filePath, content, function(err) {
+      if(err) {
+        reject(err);
+      } else {
+        resolve(content);
+      }
+    });
+  });
+};
 
 var fetchProfileAndWriteToFile = function(readFilePath, writeFilePath) {
-  // TODO
+  return pluckFirstLineFromFileAsync(readFilePath)
+  .then(function(userName) {
+    return  getGitHubProfileAsync(userName)
+    .then(function(profile) {
+       var profile = JSON.stringify(profile);
+       return writeFileAsync(writeFilePath, profile);
+    }); 
+  });
 };
 
 module.exports = {
   fetchProfileAndWriteToFile: fetchProfileAndWriteToFile
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
